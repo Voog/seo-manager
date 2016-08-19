@@ -1,0 +1,358 @@
+.page-manager {
+  min-width: 0;
+  background: white;
+}
+
+.page-manager .filter-container {
+  background: #f2f1f0;
+}
+
+.page-manager .table-container {
+  position: relative;
+}
+
+.page-manager .filters select {
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  appearance: none;
+  padding: 5px 25px 5px 5px;
+  font-size: 13px;
+  font-family: inherit;
+}
+
+.page-manager .filters .filter-group {
+  position: relative;
+  display: inline-block;
+}
+
+.page-manager .filters .filter-group + .filter-group {
+  margin-left: 8px;
+}
+
+.page-manager .filters select:focus {
+  outline: 0;
+}
+
+.page-manager .filters .ico-arrow {
+  background: url('../assets/ico-arrow.svg?1') no-repeat center;
+  width: 8px;
+  height: 7px;
+  background-size: 8px 6px;
+  position: absolute;
+  right: 7px;
+  top: 50%;
+  -moz-transform: translateY(-50%);
+  -webkit-transform: translateY(-50%);
+  transform: translateY(-50%);
+  display: block;
+}
+
+.page-manager .table-container,
+.page-manager .table-container * {
+  box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+}
+
+  .page-manager #main {
+    left: 0;
+    width: 100%;
+    margin: 0;
+    background: transparent;
+  }
+
+  .page-manager .header {
+    height: 40px;
+    background-color: #000;
+  }
+
+    .page-manager .header p {
+      margin: 0;
+      line-height: 40px;
+      display: inline-block;
+      color: #fff;
+      font-weight: 400;
+    }
+
+  .page-manager #logo {
+    width: 136px;
+    height: 40px;
+    top: 0;
+    left: 20px;
+  }
+
+  .page-manager .filter-container {
+    height: 60px;
+  }
+
+    .page-manager .filter-container .filters {
+      position: relative;
+      top: 50%;
+      -moz-transform: translateY(-50%);
+      -webkit-transform: translateY(-50%);
+      transform: translateY(-50%);
+    }
+
+  .page-manager .table-container {
+    background: white;
+    padding: 20px 20px 60px;
+    max-width: 100vw;
+    overflow-x: scroll;
+  }
+
+    .page-manager .table-container .toggle-input {
+      cursor: pointer;
+    }
+
+    .page-manager .table-container table {
+      width: 150%;
+      border-spacing: 0;
+      border-collapse: collapse;
+    }
+
+      .page-manager .table-container table thead {
+        text-transform: uppercase;
+      }
+
+        .page-manager .table-container thead th {
+          font-size: 9px;
+          text-align: left;
+          padding-left: 5px;
+        }
+
+      .page-manager .table-container table td {
+        border: 1px solid #D2D3D4;
+        text-align: left;
+        font-size: 13px;
+        font-weight: 400;
+        padding: 5px;
+      }
+
+      .page-manager table a {
+        text-decoration: underline;
+      }
+
+      .page-manager table [data-field=url] {
+        overflow: hidden;
+      }
+
+      .page-manager table [data-field=url] .url-wrapper {
+        display: block;
+        width: 100%;
+      }
+
+      .page-manager table [data-field=url] .prefix {
+        white-space: nowrap;
+        float: left;
+      }
+
+      .page-manager table [data-field=url] .path {
+        overflow: hidden;
+      }
+
+      .page-manager table [data-field=url] .path input {
+        width: 100%;
+      }
+
+      .page-manager table [data-field=title] a {
+        color: #000;
+        font-weight: 600;
+        text-decoration: none;
+      }
+
+      .page-manager tbody input[type=text],
+      .page-manager tbody textarea {
+        border: none;
+        font-size: inherit;
+        font-weight: inherit;
+        font: 400 13px/1.2 Lato,sans-serif;
+        background-color: transparent;
+        width: 100%;
+      }
+
+      .page-manager .table-container table [data-field=name] {
+        padding-right: 25px;
+        min-width: 200px;
+      }
+
+      .page-manager [data-field=title] input {
+        padding-right: 35px;
+      }
+
+      .page-manager .table-container table td[data-field=description] {
+        padding-right: 25px;
+      }
+
+        .page-manager tbody input[type=text]:active,
+        .page-manager tbody input[type=text]:focus,
+        .page-manager tbody textarea:active,
+        .page-manager tbody textarea:focus {
+          outline: 0;
+        }
+
+      .page-manager [data-field=name] {
+        position: relative;
+        transition: opacity .5s;
+      }
+
+      .page-manager [data-field=name].hidden {
+        opacity: .5;
+      }
+
+      .page-manager [data-field=name] .ico-eye {
+        background: url('../assets/ico-eye.svg?1') no-repeat center;
+        background-size: 16px 11px;
+        width: 16px;
+        height: 12px;
+        position: absolute;
+        right: 5px;
+        top: 50%;
+        -moz-transform: translateY(-50%);
+        -webkit-transform: translateY(-50%);
+        transform: translateY(-50%);
+        display: block;
+        opacity: 0;
+        cursor: pointer;
+      }
+
+      .page-manager [data-field=name]:hover .ico-eye {
+        opacity: .25;
+      }
+
+      .page-manager [data-field=name].hidden .ico-eye {
+        opacity: 1;
+      }
+
+      .page-manager [data-field=redirect] .ico-clear,
+      .page-manager [data-field=title] .ico-clear {
+          background: url('../assets/ico-cross.svg?1') no-repeat center;
+          background-size: 12px;
+          position: absolute;
+          right: 5px;
+          top: 50%;
+          -moz-transform: translateY(-50%);
+          -webkit-transform: translateY(-50%);
+          transform: translateY(-50%);
+          z-index: 10;
+          width: 12px;
+          height: 12px;
+          display: block;
+          opacity: .3;
+        }
+
+      .page-manager [data-field=redirect],
+      .page-manager [data-field=title] {
+        position: relative;
+        transition: background-color .75s;
+      }
+
+      .page-manager [data-field=title] {
+        max-width: 25%;
+      }
+
+        .page-manager [data-field=title].custom,
+        .page-manager [data-field=redirect].custom {
+          background-color: rgba(255,244,185,.5);
+        }
+
+        .page-manager [data-field=redirect] .custom-value,
+        .page-manager [data-field=title] .custom-value {
+          position: absolute;
+          top: 0;
+          right: 0;
+          bottom: 0;
+          left: 5px;
+        }
+
+        .page-manager [data-field=title] .default-value {
+          padding-right: 40px;
+        }
+
+        .page-manager [data-field=redirect].invalid {
+          background-color: rgba(245, 22, 22, 0.32);
+        }
+
+        .page-manager [data-field=redirect] .default-value {
+          padding-right: 20px;
+        }
+
+        .page-manager [data-field=redirect] {
+          min-width: 250px;
+        }
+
+        .page-manager [data-field=redirect] .custom-value input,
+        .page-manager [data-field=title] .custom-value input {
+          height: 100%;
+        }
+
+        .page-manager [data-field=redirect].custom .default-value,
+        .page-manager [data-field=title].custom .default-value {
+          display: none;
+        }
+
+        .page-manager [data-field=redirect].default .custom-value,
+        .page-manager [data-field=title].default .custom-value {
+          display: none;
+        }
+
+          .page-manager [data-field=redirect] .ico-clear:hover,
+          .page-manager [data-field=title] .ico-clear:hover {
+            opacity: .6;
+          }
+
+    .page-manager [data-field=description] {
+      width: 25%;
+      position: relative;
+    }
+
+    .page-manager .main-table .charcount {
+      font-weight: 600;
+      font-size: 9px;
+      height: 12px;
+      color: rgba(0,0,0,.5);
+      position: absolute;
+      top: 50%;
+      -moz-transform: translateY(-50%);
+      -webkit-transform: translateY(-50%);
+      transform: translateY(-50%);
+    }
+
+    .page-manager [data-field=description] .charcount {
+      right: 5px;
+    }
+
+    .page-manager [data-field=title] .charcount {
+      right: 25px;
+    }
+
+    .page-manager .page-row {
+      display: none;
+    }
+
+    .page-manager .page-row.visible {
+      display: table-row;
+    }
+
+.page-manager .loader-container {
+  display: none;
+}
+
+.page-manager .table-container.loading .loader-container {
+  display: block;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 100vh;
+}
+
+.page-manager .voog-search-loader {
+  top: 50%;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  -moz-transform: translateY(-50%);
+  -webkit-transform: translateY(-50%);
+  transform: translateY(-50%);
+}
