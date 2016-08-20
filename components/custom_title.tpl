@@ -1,7 +1,7 @@
 {% assign default_prefix = "" %}
-{% assign default_suffix = "Miku testsait" %}
+{% assign default_suffix = "" %}
 {% assign prefix_delimiter = "" %}
-{% assign suffix_delimiter = " | " %}
+{% assign suffix_delimiter = "" %}
 
 <meta property="voog:root_title" content="{{ page.site_title }}">
 <meta property="voog:title_prefix" content="{{ default_prefix }}">
