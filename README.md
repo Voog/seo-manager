@@ -1,4 +1,4 @@
-# Voog SEO tool
+# Voog SEO manager
 
 ## What is it?
 This is a custom Voog layout to help with managing all your site's pages and (some of) their SEO-critical attributes.
