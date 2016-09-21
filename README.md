@@ -50,9 +50,9 @@ To add the tool to your own site, you need to follow these few steps:
   For example, with a title of `PRODUCTS` and these title settings, this
   ```
   {% assign default_prefix = "MYCOMPANY" %}
-  {% assign default_suffix = " < " %}
-  {% assign prefix_delimiter = " > " %}
-  {% assign suffix_delimiter = "WE MAKE THE BEST STUFF" %}
+  {% assign default_suffix = "WE MAKE THE BEST STUFF " %}
+  {% assign prefix_delimiter = " < " %}
+  {% assign suffix_delimiter = " > " %}
   ```
   will result in `MYCOMPANY < PRODUCTS > WE MAKE THE BEST STUFF`
 
