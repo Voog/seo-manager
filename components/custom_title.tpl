@@ -10,23 +10,41 @@
 <meta property="voog:title_suffix_delimiter" content="{{ suffix_delimiter }}">
 
 {% capture page_title %}
-{% if article %}
-  {% if article.data.custom_title %}
-    {{ article.data.custom_title }}
-  {% else %}
-    {{ default_prefix }}{{ prefix_delimiter }}{{ article.title }}{{ suffix_delimiter }}{{ default_suffix }}
-  {% endif %}
-{% else %}
-  {% if page.data.custom_title %}
-    {{ page.data.custom_title }}
-  {% else %}
-    {% if site.root_item.selected? %}
-      {{ page.site_title }}
+
+  {% if article %}
+
+    {% if article.data.custom_title and article.data.custom_title != "" %}
+      {{ article.data.custom_title }}
     {% else %}
-      {{ default_prefix }}{{ prefix_delimiter }}{{ page.title }}{{ suffix_delimiter }}{{ default_suffix }}
+      {{ default_prefix }}{{ prefix_delimiter }}{{ article.title }}{{ suffix_delimiter }}{{ default_suffix }}
     {% endif %}
+
+  {% elsif element %}
+
+      {% if element.custom_title and element.custom_title != "" %}
+        {{ element.custom_title }}
+      {% else %}
+        {{ default_prefix }}{{ prefix_delimiter }}{{ element.title }}{{ suffix_delimiter }}{{ default_suffix }}
+      {% endif %}
+
+  {% elsif page %}
+
+    {% if page.data.custom_title and page.data.custom_title != "" %}
+      {{ page.data.custom_title }}
+    {% else %}
+      {% if site.root_item.selected? %}
+        {{ page.site_title }}
+      {% else %}  
+        {% if element.title %}
+          {{ element.title }}{{ suffix_delimiter }}{{ page.title }}
+        {% else %}
+          {{ default_prefix }}{{ prefix_delimiter }}{{ page.title }}{{ suffix_delimiter }}{{ default_suffix }}
+        {% endif %}
+      {% endif %}
+    {% endif %}
+
   {% endif %}
-{% endif %}
+
 {% endcapture %}
 
 <title>{{ page_title | strip }}</title>

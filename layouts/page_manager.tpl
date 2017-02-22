@@ -467,9 +467,10 @@
       <div class="filters">
         <div class="filter-group">
           <select name="type" id="page-types">
-            <option value="all">Pages and blog posts</option>
+            <option value="all">Pages, blog posts and elements</option>
             <option value="page">Pages only</option>
             <option value="post">Blog posts only</option>
+            <option value="element">Elements only</option>
           </select>
           <span class="ico-arrow"></span>
         </div>
@@ -680,6 +681,41 @@
           return template;
         };
 
+        var drawElementRow = function drawElementRow(element) {
+          var template = $('.page-manager #row-template tr').clone();
+          template.data('id', element.id).data('type', 'element');
+          if (element.root) {
+            template.data('root', 'true');
+          }
+          template.find('[data-field=type]').text('Element').data('type', 'element');
+          template.find('[data-field=url] .prefix').text(element.page.path + '/');
+          template.find('[data-field=url] .path input').prop('value', element.path);
+          template.find('[data-field=url] .ico-link').prop('href', element.public_url);
+          template.find('[data-field=name] input').prop('value', element.title);
+          template.find('[data-field=title] .default-value span.title-prefix').text(TITLE_PREFIX + TITLE_PREFIX_DELIMITER);
+          template.find('[data-field=title] .default-value span.title').text(element.title);
+          template.find('[data-field=title] .default-value span.title-suffix').text(TITLE_SUFFIX_DELIMITER + TITLE_SUFFIX);
+          if (element.values.hidden) {
+            template.find('[data-field=name]').addClass('hidden');
+            template.find('[data-field=name] .ico-eye').prop('title', 'This page is hidden from menus');
+          }
+          if (element.values.custom_title) {
+            template.find('[data-field=title]').addClass('custom').removeClass('default');
+            template.find('[data-field=title] .custom-value input').prop('value', element.values.custom_title);
+            template.find('[data-field=title]').data('title', 'custom');
+            template.find('[data-field=title] .charcount').text(element.values.custom_title.length);
+          } else {
+            template.find('[data-field=title]').addClass('default').removeClass('custom');
+            template.find('[data-field=title]').data('title', 'default');
+            template.find('[data-field=title] .charcount').text(element.title.length);
+          }
+          template.find('[data-field=description] textarea').prop('value', element.values.description);
+          template.find('[data-field=redirect]').addClass('default').html('&mdash;');
+          template.addClass('visible');
+          updateCharcount(template);
+          return template;
+        };
+
         var fetchPages = function fetchPages() {
           var base_url = '/admin/api/pages?s=path&per_page=250';
           $.get(base_url).success(function(response, status, xhr) {
@@ -691,6 +727,14 @@
                   $('.table-container').addClass('loading');
                   for (var i = 0; i < response.length; i += 1) {
                     $('.page-manager .main-table tbody').append(drawPostRow(response[i]));
+                  }
+                  $('.table-container').removeClass('loading');
+                });
+              } else if (response[i].content_type === 'elements') {
+                $.get(response[i].elements_url + '&include_values=true').success(function(response, status, xhr) {
+                  $('.table-container').addClass('loading');
+                  for (var i = 0; i < response.length; i += 1) {
+                    $('.page-manager .main-table tbody').append(drawElementRow(response[i]));
                   }
                   $('.table-container').removeClass('loading');
                 });
@@ -709,6 +753,14 @@
                         $('.table-container').addClass('loading');
                         for (var i = 0; i < response.length; i += 1) {
                           $('.page-manager .main-table tbody').append(drawPostRow(response[i]));
+                        }
+                        $('.table-container').removeClass('loading');
+                      });
+                    } else if (response[i].content_type === 'elements') {
+                      $.get(response[i].elements_url).success(function(response, status, xhr) {
+                        $('.table-container').addClass('loading');
+                        for (var i = 0; i < response.length; i += 1) {
+                          $('.page-manager .main-table tbody').append(drawElementRow(response[i]));
                         }
                         $('.table-container').removeClass('loading');
                       });
@@ -759,9 +811,19 @@
           var row = $(event.target).closest('tr');
           var pageId = row.data('id');
           var title = $(event.target).prop('value');
-          var type = row.data('type') === 'page' ? 'page' : 'article';
+          var type = row.data('type');
           changePageTitle(pageId, title, type).success(function(response) {
-            row.replaceWith((type == 'page' ? drawPageRow : drawPostRow)(response))
+            switch (type) {
+              case 'page':
+                row.replaceWith((drawPageRow)(response));
+                break;
+              case 'article':
+                row.replaceWith((drawPostRow)(response));
+                break;
+              case 'element':
+                row.replaceWith((drawElementRow)(response))
+                break;
+            }
           });
         });
 
@@ -784,9 +846,20 @@
           var row = $(event.target).closest('tr');
           var pageId = row.data('id');
           var name = $(event.target).prop('value');
-          var type = row.data('type') === 'page' ? 'page' : 'article';
+          var type = row.data('type');
+
           changePageName(pageId, name, type).success(function(response) {
-            row.replaceWith((type == 'page' ? drawPageRow : drawPostRow)(response))
+            switch (type) {
+              case 'page':
+                row.replaceWith((drawPageRow)(response));
+                break;
+              case 'article':
+                row.replaceWith((drawPostRow)(response));
+                break;
+              case 'element':
+                row.replaceWith((drawElementRow)(response))
+                break;
+            }
           });
           if (!row.data('root')) {
             row.find('[data-field=title] span.title').text(name);
@@ -797,9 +870,20 @@
           var row = $(event.target).closest('tr');
           var pageId = row.data('id');
           var description = $(event.target).prop('value');
-          var type = row.data('type') === 'page' ? 'page' : 'article';
+          var type = row.data('type');
+
           changePageDescription(pageId, description, type).success(function(response) {
-            row.replaceWith((type == 'page' ? drawPageRow : drawPostRow)(response))
+            switch (type) {
+              case 'page':
+                row.replaceWith((drawPageRow)(response));
+                break;
+              case 'article':
+                row.replaceWith((drawPostRow)(response));
+                break;
+              case 'element':
+                row.replaceWith((drawElementRow)(response))
+                break;
+            }
           });
         });
 
@@ -807,19 +891,42 @@
           var row = $(event.target).closest('tr');
           var pageId = row.data('id');
           var slug = $(event.target).prop('value');
-          var type = row.data('type') === 'page' ? 'page' : 'article';
+          var type = row.data('type');
+
           changePageSlug(pageId, slug, type).success(function(response) {
-            row.replaceWith((type == 'page' ? drawPageRow : drawPostRow)(response))
+            switch (type) {
+              case 'page':
+                row.replaceWith((drawPageRow)(response));
+                break;
+              case 'article':
+                row.replaceWith((drawPostRow)(response));
+                break;
+              case 'element':
+                row.replaceWith((drawElementRow)(response))
+                break;
+            }
           });
         });
 
         $('.page-manager.editmode').on('click', '.main-table [data-field=name] .ico-eye', function(event) {
           $(event.target).closest('td').toggleClass('hidden');
+          var row = $(event.target).closest('tr');
           var pageId = $(event.target).closest('tr').data('id');
           var hidden = $(event.target).closest('td').hasClass('hidden');
-          var type = $(event.target).closest('tr').data('type') === 'page' ? 'page' : 'article';
+          var type = $(event.target).closest('tr').data('type');
+
           changePageHidden(pageId, hidden, type).success(function(response) {
-            row.replaceWith((type == 'page' ? drawPageRow : drawPostRow)(response))
+            switch (type) {
+              case 'page':
+                row.replaceWith((drawPageRow)(response));
+                break;
+              case 'article':
+                row.replaceWith((drawPostRow)(response));
+                break;
+              case 'element':
+                row.replaceWith((drawElementRow)(response));
+                break;
+            }
           });
           if (hidden) {
             $(event.target).prop('title', 'This page is hidden from menus');
@@ -833,30 +940,92 @@
         });
 
         var changePageHidden = function changePageHidden(id, hidden, type) {
-          var data = (type == 'page' ? {page: { hidden: hidden }} : {article: { published: !hidden }});
+          var data;
+
+          switch (type) {
+            case 'page':
+              data = {page: { hidden: hidden }};
+              break;
+            case 'article':
+              data = {article: { published: !hidden }};
+              break;
+            case 'element':
+              data = {element: { values: {hidden: hidden} }};
+              break;
+          }
+
           return $.ajax({url: '/admin/api/' + type + 's/' + id, data: data, dataType: 'json', type: 'PUT'});
         };
 
         var changePageTitle = function changePageTitle(id, title, type) {
-          if (title && title.length > 0) {
-            return $.ajax({url: '/admin/api/' + type + 's/' + id + '/data/custom_title', data: { value: title }, dataType: 'json', type: 'PUT'});
-          } else {
-            return $.ajax({url: '/admin/api/' + type + 's/' + id + '/data/custom_title', dataType: 'json', type: 'DELETE'});
+          var data;
+
+          switch (type) {
+            case 'page':
+              data = {page: {data: {custom_title: title} }};
+              break;
+            case 'article':
+              data = {article: {data: {custom_title: title} }};
+              break;
+            case 'element':
+              data = {element: {values: {custom_title: title} }};
+              break;
           }
+
+          return $.ajax({url: '/admin/api/' + type + 's/' + id, data: data, dataType: 'json', type: 'PUT'});
         };
 
         var changePageName = function changePageName(id, name, type) {
-          var data = (type == 'page' ? {page: { title: name }} : {article: { autosaved_title: name }});
+          var data;
+
+          switch (type) {
+            case 'page':
+              data = {page: { title: name }};
+              break;
+            case 'article':
+              data = {article: { autosaved_title: name }};
+              break;
+            case 'element':
+              data = {element: { title: name }};
+              break;
+          }
+
           return $.ajax({url: '/admin/api/' + type + 's/' + id, data: data, dataType: 'json', type: 'PUT'});
         };
 
         var changePageDescription = function changePageDescription(id, description, type) {
-          var data = (type == 'page' ? {page: { description: description }} : {article: { description: description }});
+          var data;
+
+          switch (type) {
+            case 'page':
+              data = {page: { description: description }};
+              break;
+            case 'article':
+              data = {article: { description: description }};
+              break;
+            case 'element':
+              data = {element: { values: {description: description} }};
+              break;
+          }
+
           return $.ajax({url: '/admin/api/' + type + 's/' + id, data: data, dataType: 'json', type: 'PUT'});
         };
 
         var changePageSlug = function changePageSlug(id, slug, type) {
-          var data = (type == 'page' ? {page: { slug: slug }} : {article: { path: slug }});
+          var data;
+
+          switch (type) {
+            case 'page':
+              data = {page: { slug: slug }};
+              break;
+            case 'article':
+              data = {article: { slug: slug }};
+              break;
+            case 'element':
+              data = {element: { path: slug }};
+              break;
+          }
+
           return $.ajax({url: '/admin/api/' + type + 's/' + id, data: data, dataType: 'json', type: 'PUT'});
         };
 
@@ -886,6 +1055,11 @@
                 break;
               case 'page':
                 if (row.data('type') != 'page') {
+                  show = false;
+                }
+                break;
+              case 'element':
+                if (row.data('type') != 'element') {
                   show = false;
                 }
                 break;
